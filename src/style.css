@@ -157,27 +157,25 @@ body {
   color: var(--paper);
 }
 
-.veil {
+/* le canvas vient couvrir l'ecran, derriere le contenu, le temps que le signe
+   se ferme et grossisse */
+.showcase-canvas.is-sealing {
   position: fixed;
   inset: 0;
-  overflow: hidden;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  translate: none;
+  aspect-ratio: auto;
+  z-index: 0;
   pointer-events: none;
-  visibility: hidden;
 }
 
-.veil.is-live { visibility: visible; }
-
-/* l'ecran est couvert : le trace ne sert plus a rien, la couleur suffit */
-.veil.is-flat { background: var(--blue); }
-.veil.is-flat .veil-shape { display: none; }
-
-.veil-shape {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: var(--blue);
-}
+/* l'ecran est couvert : plus rien a peindre, la couleur du canvas suffit — et
+   elle tient jusqu'a ce que la section bleue soit passee */
+.showcase-canvas.is-flat { background: var(--blue); }
+.showcase-canvas.is-past { display: none; }
 
 .blue section {
   position: relative;

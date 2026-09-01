@@ -10,6 +10,12 @@ const RAMP: readonly Rgb[] = [
   [8, 18, 74],
 ];
 
+/**
+ * Rang du bleu de fond dans la rampe : la fermeture y amene les particules,
+ * pour qu'elles rejoignent exactement la couleur qui prendra leur suite.
+ */
+export const BLUE_LEVEL = 3 / (RAMP.length - 1);
+
 /** Paliers de quantification : autant de chaines rgb pre-calculees. */
 const STEPS = 16;
 

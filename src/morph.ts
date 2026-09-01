@@ -11,7 +11,7 @@ import { FALLBACK_GLYPH, GLYPHS } from './presets';
 import { sampleImage, sortByAngle } from './sampler';
 import { Scene } from './scene';
 import { activeStage } from './scroll';
-import { Veil } from './veil';
+import { studyCloud, studySeal, type Cloud, type Seal } from './seal';
 import type { Cell, Crop, Frames, Glyph, Settings } from './types';
 
 const CANVAS_SIZE = 760;
@@ -50,6 +50,7 @@ export class Morph {
         pin: need('showcase-pin'),
         slots: all('#showcase [data-slot]'),
         hold: need('showcase').querySelector<HTMLElement>('.hold') ?? undefined,
+        flood: need('blue'),
       },
       this,
     ),
@@ -64,14 +65,6 @@ export class Morph {
     ),
   ];
 
-  /** le signe qui grossit jusqu'a devenir le fond de la suite */
-  private readonly veil = new Veil({
-    veil: need('veil'),
-    particles: need('showcase-canvas'),
-    trigger: need<HTMLElement>('showcase').querySelector<HTMLElement>('.hold')!,
-    zone: need('blue'),
-  });
-
   private readonly panel = new Panel({
     onGrid: () => this.rebuild(),
     onGlyph: () => this.refreshGlyph(),
@@ -83,6 +76,9 @@ export class Morph {
   /** ou vivent les frames de chaque clip dans le tableau des etapes */
   spans: Span[] = [];
   frames: Frames | null = null;
+  /** le motif etudie pour la fermeture, et la matiere du signe final */
+  seal: Seal | null = null;
+  cloud: Cloud | null = null;
   private glyph: Glyph | null = null;
   private glyphError = '';
   private readonly onResize = () => this.scenes.forEach((scene) => scene.resize());
@@ -127,7 +123,6 @@ export class Morph {
     // page : on attend qu'elle soit posee, polices comprises
     void layoutReady().then(() => {
       this.scenes.forEach((scene) => scene.mount());
-      this.veil.mount();
     });
 
     void this.loadClips().then(() => {
@@ -179,6 +174,9 @@ export class Morph {
     });
 
     this.frames = buildFrames(stages, CANVAS_SIZE);
+    // la fermeture part du dernier signe pose : c'est sa matiere qui grossit
+    const last = clouds[clouds.length - 1]?.[0];
+    this.cloud = last ? studyCloud(last, settings.cols, settings.px) : null;
     this.describe();
   }
 
@@ -195,6 +193,7 @@ export class Morph {
     const parsed = parseGlyph(this.glyphSource);
     this.glyphError = parsed ? '' : 'SVG illisible → chevron';
     this.glyph = parsed ?? parseGlyph(GLYPHS[FALLBACK_GLYPH]);
+    this.seal = this.glyph ? studySeal(this.glyph) : null;
     this.describe();
   }
 

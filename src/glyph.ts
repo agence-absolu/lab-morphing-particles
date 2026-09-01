@@ -78,6 +78,7 @@ export function parseGlyph(source: string): Glyph | null {
     const [bx, by, bw, bh] = parsed.box;
     return {
       path: new Path2D(parsed.d),
+      d: parsed.d,
       cx: bx + bw / 2,
       cy: by + bh / 2,
       size: Math.max(bw, bh),

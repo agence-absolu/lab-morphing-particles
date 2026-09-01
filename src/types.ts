@@ -23,6 +23,8 @@ export interface Crop {
 /** Un motif SVG compile, centre et normalise sur sa viewBox. */
 export interface Glyph {
   path: Path2D;
+  /** le trace aplati, pour qui doit relire sa geometrie */
+  d: string;
   cx: number;
   cy: number;
   size: number;
