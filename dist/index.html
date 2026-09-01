@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morphing — Regarder, mettre en mouvement, atteindre le sommet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
+  <script type="module" crossorigin src="/assets/index-DpTS-9nk.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-xI_bzou6.css">
+</head>
+<body>
+
+<header class="hero">
+  <p class="kicker">Morphing_</p>
+  <h1>Regarder, mettre en <em>mouvement</em>, atteindre le sommet</h1>
+  <p class="lede">
+    Trois signes, une seule grille. Chaque cellule porte un motif dont la taille,
+    l'épaisseur et la profondeur de bleu traduisent la densité de l'image source.
+    Le scroll réorganise la grille.
+  </p>
+  <p class="hint">↓ Scrollez</p>
+</header>
+
+<div id="showcase" class="showcase">
+  <div id="showcase-pin" class="showcase-pin">
+    <canvas id="showcase-canvas" class="showcase-canvas"></canvas>
+  </div>
+
+  <section class="scene">
+    <div class="slot" data-slot></div>
+    <div class="copy">
+      <p class="step">01 — Regarder</p>
+      <h2>L'attention se pose avant que le geste ne commence</h2>
+      <p>Un œil ouvert, tenu en éveil par la trame. Chaque cellule pèse la densité
+        de l'image et n'en garde que la matière : le regard se reconstitue point
+        par point, sans jamais être dessiné.</p>
+    </div>
+  </section>
+
+  <section class="scene reverse">
+    <div class="slot" data-slot></div>
+    <div class="copy">
+      <p class="step">02 — Mettre en mouvement</p>
+      <h2>La même matière, réorganisée en engrenage</h2>
+      <p>Aucun point n'apparaît, aucun ne disparaît. Les cellules du regard
+        rejoignent celles de la roue, une à une, en suivant l'angle qu'elles
+        occupaient autour du centre.</p>
+    </div>
+  </section>
+
+  <section class="scene">
+    <div class="slot" data-slot></div>
+    <div class="copy">
+      <p class="step">03 — Atteindre le sommet</p>
+      <h2>Le mouvement trouve sa direction</h2>
+      <p>Le drapeau se compose des mêmes particules que l'œil du début. Trois
+        signes, une seule grille, une seule trajectoire : celle que le scroll
+        déroule et rembobine à l'identique.</p>
+    </div>
+  </section>
+
+  <section class="scene solo">
+    <div class="slot" data-slot></div>
+  </section>
+
+  <!-- prolonge l'epinglage : le signe reste immobile pendant le relais -->
+  <section class="hold" aria-hidden="true"></section>
+</div>
+
+<div id="blue" class="blue">
+  <section class="blue-lede">
+    <p class="step">Le signe prend toute la place</p>
+    <h2>Une grille, trois signes, un seul geste</h2>
+    <p class="lede-blue">Ce qui commence comme un œil finit en signature. La même
+      matière traverse chaque état sans jamais se recomposer : elle se déplace.</p>
+  </section>
+
+  <section class="figures">
+    <div><strong>1 964</strong><span>particules à l'écran</span></div>
+    <div><strong>5</strong><span>états échantillonnés</span></div>
+    <div><strong>60²</strong><span>cellules de grille</span></div>
+    <div><strong>1,4 ms</strong><span>par image</span></div>
+  </section>
+
+  <section class="quote">
+    <blockquote>Aucun point n'apparaît, aucun ne disparaît.<br>Tout ce qui est
+      là au départ est encore là à l'arrivée.</blockquote>
+  </section>
+
+  <section class="tags">
+    <span>Densité</span><span>Appariement angulaire</span><span>Proximité</span>
+    <span>Paliers</span><span>Arc</span><span>Stagger</span><span>Clips animés</span>
+    <span>Path2D</span><span>Float32Array</span><span>ScrollTrigger</span><span>Lenis</span>
+  </section>
+</div>
+
+<!-- banc d'essai masque temporairement -->
+<section id="track" class="track" hidden>
+  <div id="pin" class="pin">
+    <canvas id="canvas" class="canvas"></canvas>
+
+    <nav class="legend">
+      <span data-stage="0">Œil_</span>
+      <span class="rule"></span>
+      <span data-stage="1">Roue_</span>
+      <span class="rule"></span>
+      <span data-stage="2">Sommet_</span>
+      <span class="rule"></span>
+      <span data-stage="3">Signe_</span>
+    </nav>
+
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+</section>
+
+<footer class="notes">
+  <article>
+    <h2>Densité_</h2>
+    <p>Chaque image est lue cellule par cellule. La densité de la cellule fixe l'échelle du motif,
+      son épaisseur de trait et sa position sur la rampe de bleus, du bleu pâle au navy.</p>
+  </article>
+  <article>
+    <h2>Appariement_</h2>
+    <p>Les cellules des trois signes sont ordonnées par angle autour du centre, puis appariées une
+      à une. Les motifs se déplacent d'un signe au suivant au lieu de disparaître.</p>
+  </article>
+  <article>
+    <h2>Scroll_</h2>
+    <p>La position de défilement pilote la totalité du mouvement : deux transitions, trois paliers
+      de lecture. Remonter inverse exactement le morphing.</p>
+  </article>
+</footer>
+
+</body>
+</html>
