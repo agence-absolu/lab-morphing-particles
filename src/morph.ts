@@ -15,13 +15,10 @@ import { studyCloud, studySeal, type Cloud, type Seal } from './seal';
 import type { Cell, Crop, Frames, Glyph, Settings } from './types';
 
 const CANVAS_SIZE = 760;
-// servies telles quelles depuis public/
-const SOURCES = [
-  '/uploads/eye.png',
-  '/uploads/roue.png',
-  '/uploads/flag.png',
-  '/uploads/logo.png',
-];
+// servies telles quelles depuis public/, sous la base du site
+const SOURCES = ['eye.png', 'roue.png', 'flag.png', 'logo.png'].map(
+  (file) => `${import.meta.env.BASE_URL}uploads/${file}`,
+);
 
 /** Polices chargees et styles appliques : les mesures deviennent fiables. */
 const layoutReady = (): Promise<unknown> =>
