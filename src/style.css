@@ -152,8 +152,11 @@ body {
   position: relative;
   /* blanc au depart : le bleu arrive par le signe, pas par un aplat */
   background: var(--paper);
-  /* le signe met une pleine course a couvrir l'ecran : le contenu attend */
-  padding: 160vh 32px 0;
+  /* la section remonte sur la fin de la course : le signe acheve de grossir
+     pendant que le contenu entre par le bas. 55vh valent le dernier quart de
+     cette fin, qui en occupe 231 : le texte parait donc vers 76 % */
+  margin-top: -55vh;
+  padding: 10vh 32px 0;
   color: var(--paper);
 }
 
@@ -172,10 +175,11 @@ body {
   pointer-events: none;
 }
 
-/* l'ecran est couvert : plus rien a peindre, la couleur du canvas suffit — et
-   elle tient jusqu'a ce que la section bleue soit passee */
+/* l'ecran est couvert : plus rien a peindre. Le canvas porte l'aplat le temps
+   que la section arrive, puis elle le porte seule et il s'efface */
 .showcase-canvas.is-flat { background: var(--blue); }
 .showcase-canvas.is-past { display: none; }
+.blue.is-flat { background: var(--blue); }
 
 .blue section {
   position: relative;
@@ -327,6 +331,7 @@ body {
 /* ----------------------------------------------------------------------- notes */
 
 .notes {
+  background: var(--ink);
   max-width: 1440px;
   margin: 0 auto;
   padding: 96px 32px 140px;

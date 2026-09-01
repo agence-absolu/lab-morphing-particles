@@ -46,6 +46,12 @@ export interface Frames {
   jitter: Float32Array;
 }
 
+/**
+ * Comment la course s'acheve : en fermant chaque cellule sur elle-meme, ou en
+ * plongeant dans le motif d'une seule.
+ */
+export type Ending = 'cells' | 'dive';
+
 /** Reglages derives des valeurs par defaut et de la barre de reglages. */
 export interface Settings {
   cols: number;
@@ -56,4 +62,5 @@ export interface Settings {
   hold: number;
   /** densite en dessous de laquelle une cellule est ignoree */
   floor: number;
+  ending: Ending;
 }

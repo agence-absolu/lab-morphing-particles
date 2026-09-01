@@ -9,7 +9,7 @@ import { Panel } from './panel';
 import type { Span } from './playback';
 import { FALLBACK_GLYPH, GLYPHS } from './presets';
 import { sampleImage, sortByAngle } from './sampler';
-import { Scene } from './scene';
+import { Scene, type Closing } from './scene';
 import { activeStage } from './scroll';
 import { studyCloud, studySeal, type Cloud, type Seal } from './seal';
 import type { Cell, Crop, Frames, Glyph, Settings } from './types';
@@ -17,7 +17,7 @@ import type { Cell, Crop, Frames, Glyph, Settings } from './types';
 const CANVAS_SIZE = 760;
 // servies telles quelles depuis public/
 const SOURCES = [
-  '/uploads/blink-eye.gif',
+  '/uploads/eye.png',
   '/uploads/roue.png',
   '/uploads/flag.png',
   '/uploads/logo.png',
@@ -51,6 +51,7 @@ export class Morph {
         slots: all('#showcase [data-slot]'),
         hold: need('showcase').querySelector<HTMLElement>('.hold') ?? undefined,
         flood: need('blue'),
+        onClose: (state) => this.showClosing(state),
       },
       this,
     ),
@@ -94,6 +95,7 @@ export class Morph {
       arc: ARC,
       hold: HOLD,
       floor: FLOOR,
+      ending: this.panel.params.ending,
     };
   }
 
@@ -208,6 +210,12 @@ export class Morph {
   }
 
   // ------------------------------------------------------------------ boucle
+
+  /** Renvoie au panneau ou en est la fin de course. */
+  private showClosing(state: Closing): void {
+    const pace = `${Math.round(state.wait * 100)} % · ×${state.zoom.toFixed(1)}`;
+    this.panel.pace(state.covered ? `${pace} · couvert` : pace);
+  }
 
   private paintLegend(progress: number): void {
     this.bar.style.width = `${(progress * 100).toFixed(1)}%`;

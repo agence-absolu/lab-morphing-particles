@@ -1,6 +1,7 @@
 import GUI from 'lil-gui';
 
 import { DEFAULT_GLYPH, GLYPHS, isSolid } from './presets';
+import type { Ending } from './types';
 
 /** Les valeurs que le panneau expose et modifie en place. */
 export interface Params {
@@ -11,7 +12,10 @@ export interface Params {
   /** SVG ou path colle a la main, prioritaire sur le preset */
   svg: string;
   filled: boolean;
+  /** comment la course s'acheve */
+  ending: Ending;
   /** lectures seules, alimentees par le morphing */
+  pace: string;
   grid: string;
   motif: string;
 }
@@ -37,6 +41,8 @@ export class Panel {
     glyph: DEFAULT_GLYPH,
     svg: '',
     filled: isSolid(DEFAULT_GLYPH),
+    ending: 'dive',
+    pace: '',
     grid: '',
     motif: '',
   };
@@ -53,6 +59,13 @@ export class Panel {
 
     const motion = this.gui.addFolder('Morphing');
     motion.add(params, 'stagger', 0, 0.8, 0.02).name('Stagger').onChange(listener.onLook);
+
+    const ending = this.gui.addFolder('Fin');
+    ending
+      .add(params, 'ending', { 'Fermer les cellules': 'cells', 'Plonger dans un motif': 'dive' })
+      .name('Course finale')
+      .onChange(listener.onLook);
+    ending.add(params, 'pace').name('').disable().listen();
 
     const glyph = this.gui.addFolder('Motif');
     glyph
@@ -74,6 +87,11 @@ export class Panel {
   show(grid: string, motif: string): void {
     this.params.grid = grid;
     this.params.motif = motif;
+  }
+
+  /** Ou en est la fin de course, image par image. */
+  pace(text: string): void {
+    this.params.pace = text;
   }
 
   /** A appeler quand le code change une valeur que l'utilisateur voit. */

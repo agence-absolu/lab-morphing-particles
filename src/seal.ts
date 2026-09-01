@@ -21,10 +21,15 @@ export interface Point {
   y: number;
 }
 
-/** Un motif etudie : ou zoomer dedans, de combien, et son contour aplati. */
-export interface Seal {
-  /** point le plus loin de tout bord, en unites de viewBox */
+/** Un point ou plonger, et jusqu'ou la matiere y est pleine. */
+export interface Focus {
   pole: Point;
+  /** demi-cote du carre plein autour du pole */
+  reach: number;
+}
+
+/** Un motif etudie : ou zoomer dedans, de combien, et son contour aplati. */
+export interface Seal extends Focus {
   /** zoom a partir duquel le motif remplit sa cellule */
   zoom: number;
   /** contours aplatis, un par sous-chemin */
@@ -33,12 +38,10 @@ export interface Seal {
   cell: { x0: number; y0: number; x1: number; y1: number };
 }
 
-/** Le nuage final vu comme une matiere : ou zoomer, et jusqu'ou elle est pleine. */
-export interface Cloud {
-  /** centre de la cellule la plus profonde, en unites de canvas */
-  pole: Point;
-  /** demi-cote du carre plein autour du pole, en unites de canvas */
-  reach: number;
+/** Le nuage final vu comme une matiere, en unites de canvas. */
+export interface Cloud extends Focus {
+  /** densite de la cellule du pole : c'est elle qui dimensionne son motif */
+  v: number;
 }
 
 /**
@@ -182,6 +185,7 @@ export function studySeal(glyph: Glyph): Seal {
   // jamais
   const plain: Seal = {
     pole: { x: glyph.cx, y: glyph.cy },
+    reach: half,
     zoom: 1,
     rings: square(cell),
     cell,
@@ -191,7 +195,7 @@ export function studySeal(glyph: Glyph): Seal {
 
   const step = glyph.size / RES;
   const depth = depthMap(rasterize(glyph, cell), RES, RES);
-  let best: { pole: Point; zoom: number } | null = null;
+  let best: { pole: Point; reach: number; zoom: number } | null = null;
 
   // le pole est celui qui demande le moins de grossissement : profond dans la
   // matiere, mais aussi proche que possible du coin de cellule le plus lointain
@@ -207,25 +211,37 @@ export function studySeal(glyph: Glyph): Seal {
       pole.y - cell.y0,
       cell.y1 - pole.y,
     );
-    const zoom = (far / ((depth[i] - 0.5) * step)) * MARGIN;
-    if (!best || zoom < best.zoom) best = { pole, zoom };
+    const reach = (depth[i] - 0.5) * step;
+    const zoom = (far / reach) * MARGIN;
+    if (!best || zoom < best.zoom) best = { pole, reach, zoom };
   }
   if (!best) return plain;
 
-  return { pole: best.pole, zoom: Math.min(MAX_ZOOM, best.zoom), rings, cell };
+  return {
+    pole: best.pole,
+    reach: best.reach,
+    zoom: Math.min(MAX_ZOOM, best.zoom),
+    rings,
+    cell,
+  };
 }
 
 /** Meme lecture, mais sur le nuage de cellules : la matiere reellement peinte. */
 export function studyCloud(cells: Cell[], cols: number, px: number): Cloud | null {
   if (!cells.length) return null;
   const mask = new Uint8Array(cols * cols);
-  for (const cell of cells) mask[cell.id] = 1;
+  const density = new Float32Array(cols * cols);
+  for (const cell of cells) {
+    mask[cell.id] = 1;
+    density[cell.id] = cell.v;
+  }
 
   const { col, row, depth } = deepest(mask, cols, cols);
   if (!depth) return null;
   return {
     pole: { x: (col + 0.5) * px, y: (row + 0.5) * px },
     reach: (depth - 0.5) * px,
+    v: density[row * cols + col],
   };
 }
 

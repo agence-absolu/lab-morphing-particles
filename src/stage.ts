@@ -8,20 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 const LERP = 0.09;
 
 /**
- * Reperes start / end de ScrollTrigger, sur la course du pin. Affiches en dev,
- * et a la demande ailleurs en ajoutant ?markers a l'URL.
- */
-const MARKERS =
-  import.meta.env.DEV || new URLSearchParams(window.location.search).has('markers');
-
-/** Couleurs laissees a ScrollTrigger : on ne regle que la place et la taille. */
-const MARKER_STYLE = {
-  fontSize: '11px',
-  fontWeight: '500',
-  indent: 12,
-};
-
-/**
  * Un seul Lenis pour toute la page, quel que soit le nombre de scenes : deux
  * instances se disputeraient la molette. Le ticker de GSAP le fait avancer et
  * ScrollTrigger se recale a chaque defilement.
@@ -70,7 +56,6 @@ export class Stage {
       start: 'top top',
       end: 'bottom bottom',
       pinSpacing: false,
-      markers: MARKERS && MARKER_STYLE,
       onRefresh: () => onRefresh?.(),
       onUpdate: (self) => {
         this.progress = self.progress;

@@ -14,10 +14,12 @@ export interface View {
   oy: number;
 }
 
-/** La fermeture en cours : le motif scelle, son avancement, et le cadrage. */
+/** La fin en cours : le motif scelle, son avancement, et le cadrage. */
 export interface Sealing {
-  /** de 0 (le motif) a 1 (la cellule pleine) */
+  /** fermeture : de 0 (le motif) a 1 (la cellule pleine) */
   t: number;
+  /** ralliement au fond : de 0 (la densite decide) a 1 (opaque, et bleu) */
+  tint: number;
   path: Path2D;
   view: View;
 }
@@ -33,6 +35,9 @@ const FILL_FADE = 0.3;
  * une couture claire entre deux voisines, et l'aplat se verrait quadrille.
  */
 const BLEED = 1.5;
+
+/** Part de la cellule qu'occupe un motif, selon la densite qu'il porte. */
+export const motifScale = (v: number): number => 0.5 + 0.62 * v;
 
 /** Dessine une frame du morphing sur le canvas. */
 export class Painter {
@@ -89,6 +94,7 @@ export class Painter {
 
     const view = seal?.view ?? PLAIN;
     const shut = seal?.t ?? 0;
+    const tint = seal?.tint ?? 0;
     const path = seal ? seal.path : look.glyph.path;
     // un contour ne peut pas fermer une cellule : il passe au plein des le depart
     const fill = look.filled ? 1 : Math.min(1, shut / FILL_FADE);
@@ -120,7 +126,7 @@ export class Painter {
       // en fin de croissance, l'essentiel de la grille est hors de l'ecran
       if (x < -margin || y < -margin || x > this.w + margin || y > this.h + margin) continue;
 
-      const next = bucketOf(lerp(v, BLUE_LEVEL, shut));
+      const next = bucketOf(lerp(v, BLUE_LEVEL, tint));
       if (next !== bucket) {
         bucket = next;
         if (fill > 0) ctx.fillStyle = this.ramp[next];
@@ -133,9 +139,9 @@ export class Painter {
         look.glyph,
         x,
         y,
-        unit * lerp((0.5 + 0.62 * v) * (1 - 0.22 * bow), 1, shut) + bleed,
+        unit * lerp(motifScale(v) * (1 - 0.22 * bow), 1, shut) + bleed,
         Math.max(1, s.px * (0.1 + 0.2 * v)) * view.scale,
-        lerp((0.3 + 0.7 * v) * (1 - 0.35 * bow), 1, shut),
+        lerp((0.3 + 0.7 * v) * (1 - 0.35 * bow), 1, tint),
         fill,
       );
     }
