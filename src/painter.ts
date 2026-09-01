@@ -113,6 +113,10 @@ export class Painter {
       const t = travel(held, s.stagger, f.drift[i]);
       const e = easeInOut(t);
       const bow = Math.sin(Math.PI * t);
+      // une particule qui double sa voisine n'a rien a ajouter : elle s'efface,
+      // et reparait la ou la cellule qu'elle rejoint est bien la sienne
+      const solo = lerp(f.solo[from + i], f.solo[to + i], e);
+      if (solo <= 0) continue;
       const v = lerp(f.v[from + i], f.v[to + i], e);
 
       const ax = f.x[from + i];
@@ -141,7 +145,7 @@ export class Painter {
         y,
         unit * lerp(motifScale(v) * (1 - 0.22 * bow), 1, shut) + bleed,
         Math.max(1, s.px * (0.1 + 0.2 * v)) * view.scale,
-        lerp((0.3 + 0.7 * v) * (1 - 0.35 * bow), 1, tint),
+        lerp((0.3 + 0.7 * v) * (1 - 0.35 * bow), 1, tint) * solo,
         fill,
       );
     }

@@ -92,7 +92,9 @@ body {
   top: 50%;
   left: 0;
   translate: 0 -50%;
-  width: min(46vw, 62vh);
+  /* la grille garde une marge de securite (INSET, sampler.ts) : le canvas est
+     agrandi d'autant pour que le signe conserve sa taille */
+  width: calc(min(46vw, 62vh) / 0.8);
   aspect-ratio: 1;
   display: block;
   will-change: transform;
@@ -272,7 +274,7 @@ body {
 }
 
 .canvas {
-  width: min(760px, 86vw, 58vh);
+  width: calc(min(760px, 86vw, 58vh) / 0.8);
   aspect-ratio: 1;
   display: block;
 }

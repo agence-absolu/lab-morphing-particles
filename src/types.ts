@@ -40,6 +40,12 @@ export interface Frames {
   x: Float32Array;
   y: Float32Array;
   v: Float32Array;
+  /**
+   * 1 si la particule est seule sur sa cellule, 0 si une autre l'occupe deja.
+   * Les nuages n'ont pas tous le meme nombre de cellules : les particules en
+   * trop doublent sur celles de leurs voisines, et n'ont rien a y ajouter.
+   */
+  solo: Float32Array;
   /** par particule : retard du stagger (0 a 1) */
   drift: Float32Array;
   /** par particule : sens et amplitude de l'arc */

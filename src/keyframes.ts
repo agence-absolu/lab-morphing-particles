@@ -6,6 +6,7 @@ const EMPTY: Frames = {
   x: new Float32Array(0),
   y: new Float32Array(0),
   v: new Float32Array(0),
+  solo: new Float32Array(0),
   drift: new Float32Array(0),
   jitter: new Float32Array(0),
 };
@@ -25,14 +26,19 @@ export function buildFrames(stages: Cell[][], canvasSize: number): Frames {
   const x = new Float32Array(total);
   const y = new Float32Array(total);
   const v = new Float32Array(total);
+  const solo = new Float32Array(total);
 
   stages.forEach((cells, stage) => {
     const base = stage * count;
+    const taken = new Set<number>();
     for (let i = 0; i < count; i++) {
       const cell = cells[i];
       x[base + i] = cell.x;
       y[base + i] = cell.y;
       v[base + i] = cell.v;
+      // la premiere venue tient la cellule ; les suivantes s'y superposeraient
+      solo[base + i] = taken.has(cell.id) ? 0 : 1;
+      taken.add(cell.id);
     }
   });
 
@@ -43,5 +49,5 @@ export function buildFrames(stages: Cell[][], canvasSize: number): Frames {
     jitter[i] = noise(i);
   }
 
-  return { stages: stages.length, count, x, y, v, drift, jitter };
+  return { stages: stages.length, count, x, y, v, solo, drift, jitter };
 }

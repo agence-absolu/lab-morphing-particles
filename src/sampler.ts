@@ -2,6 +2,14 @@ import { sizeOf } from './framing';
 import { density, detectInk, type Ink } from './ink';
 import type { Cell, Crop, Settings } from './types';
 
+/**
+ * Part du canvas ou le sujet est dessine. Le reste est une marge de securite :
+ * un motif deborde de sa cellule, et l'arc des transitions ecarte les
+ * particules de leur trajectoire — sans cette reserve, elles seraient coupees
+ * au bord. La taille affichee des canvas la compense (voir style.css).
+ */
+const INSET = 0.8;
+
 /** Sous-echantillonnage : un point tous les tiers de cellule environ. */
 const stepFor = (px: number) => Math.max(1, Math.round(px / 3));
 
@@ -22,7 +30,7 @@ function rasterize(
 
   const full = sizeOf(img);
   const box = crop ?? { x: 0, y: 0, w: full.w, h: full.h };
-  const k = Math.min(size / box.w, size / box.h);
+  const k = Math.min(size / box.w, size / box.h) * INSET;
   const dx = (size - box.w * k) / 2;
   const dy = (size - box.h * k) / 2;
   ctx.drawImage(img, box.x, box.y, box.w, box.h, dx, dy, box.w * k, box.h * k);

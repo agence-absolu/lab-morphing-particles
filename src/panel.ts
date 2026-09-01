@@ -36,7 +36,7 @@ export interface PanelListener {
  */
 export class Panel {
   readonly params: Params = {
-    cols: 60,
+    cols: 75,
     stagger: 0,
     glyph: DEFAULT_GLYPH,
     svg: '',
