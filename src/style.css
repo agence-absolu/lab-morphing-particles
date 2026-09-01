@@ -1,0 +1,355 @@
+:root {
+  --ink: #0b0b0c;
+  --paper: #ffffff;
+  --blue: #1e3fe4;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --sans: 'Inter Tight', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans);
+}
+
+/* ------------------------------------------------------------------ ouverture */
+
+.hero {
+  height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+  margin: 0 0 24px;
+}
+
+.hero h1 {
+  font-size: clamp(44px, 6.5vw, 96px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  margin: 0;
+  max-width: 18ch;
+  text-wrap: pretty;
+}
+
+.hero h1 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.lede {
+  font-size: 20px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 56ch;
+  margin: 32px 0 0;
+}
+
+.hint {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.48);
+  margin: 56px 0 0;
+}
+
+/* ------------------------------------------------------- mise en situation */
+
+.showcase {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* le canvas flotte au-dessus des sections : il ne prend pas de place dans le flux */
+.showcase-pin {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* Cale sur le bord gauche, jamais centre : ScrollTrigger change la largeur du
+   pin en l'epinglant, le motif viserait alors un centre mouvant. C'est le
+   script qui le place, en coordonnees d'ecran. */
+.showcase-canvas {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  translate: 0 -50%;
+  width: min(46vw, 62vh);
+  aspect-ratio: 1;
+  display: block;
+  will-change: transform;
+}
+
+.scene {
+  height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 64px;
+}
+
+/* une section sur deux renvoie le motif de l'autre cote */
+.scene.reverse .slot { order: 2; }
+.scene.reverse .copy { order: 1; }
+
+/* la derniere n'a que le signe, au milieu */
+.scene.solo { grid-template-columns: 1fr; }
+
+/* course supplementaire : le motif garde sa place pendant le relais */
+.hold { height: 200vh; }
+
+.copy { max-width: 46ch; }
+
+.step {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin: 0 0 20px;
+}
+
+.copy h2 {
+  font-size: clamp(28px, 3.4vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  text-wrap: pretty;
+}
+
+.copy p:last-child {
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(11, 11, 12, 0.66);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------- fond bleu */
+
+.blue {
+  position: relative;
+  /* blanc au depart : le bleu arrive par le signe, pas par un aplat */
+  background: var(--paper);
+  /* le signe met une pleine course a couvrir l'ecran : le contenu attend */
+  padding: 160vh 32px 0;
+  color: var(--paper);
+}
+
+.veil {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.veil.is-live { visibility: visible; }
+
+/* l'ecran est couvert : le trace ne sert plus a rien, la couleur suffit */
+.veil.is-flat { background: var(--blue); }
+.veil.is-flat .veil-shape { display: none; }
+
+.veil-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--blue);
+}
+
+.blue section {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 0 22vh;
+}
+
+.blue-lede h2 {
+  font-size: clamp(32px, 4.6vw, 68px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  margin: 0 0 28px;
+  max-width: 18ch;
+  text-wrap: pretty;
+}
+
+.blue .step { color: rgba(255, 255, 255, 0.66); }
+
+.lede-blue {
+  font-size: 19px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 52ch;
+  margin: 0;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  padding-top: 40px !important;
+}
+
+.figures strong {
+  display: block;
+  font-size: clamp(34px, 4vw, 54px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.figures span {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.quote blockquote {
+  margin: 0;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 52px);
+  line-height: 1.18;
+  max-width: 22ch;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.tags span {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 99px;
+  padding: 7px 14px;
+}
+
+/* -------------------------------------------------------------------- morphing */
+
+.track { height: 600vh; position: relative; }
+
+.pin {
+  height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  gap: 24px;
+}
+
+.canvas {
+  width: min(760px, 86vw, 58vh);
+  aspect-ratio: 1;
+  display: block;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.legend { gap: 20px; letter-spacing: 0.08em; text-transform: uppercase; }
+.legend span { color: rgba(11, 11, 12, 0.4); transition: color 120ms linear; }
+.legend span[data-active] { color: var(--ink); }
+.legend .rule { width: 56px; height: 1px; background: rgba(11, 11, 12, 0.12); }
+
+.progress {
+  width: min(760px, 86vw);
+  height: 1px;
+  background: rgba(11, 11, 12, 0.12);
+  position: relative;
+}
+
+.progress span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--blue);
+}
+
+/* -------------------------------------------------------- panneau de reglages */
+
+.lil-gui {
+  --background-color: rgba(11, 11, 12, 0.92);
+  --widget-color: rgba(255, 255, 255, 0.12);
+  --hover-color: rgba(255, 255, 255, 0.2);
+  --focus-color: var(--blue);
+  --number-color: #8ea6f5;
+  --string-color: #8ea6f5;
+  --font-family: var(--mono);
+  --font-size: 11px;
+  --input-font-size: 11px;
+  --padding: 6px;
+  --width: 340px;
+  --name-width: 38%;
+  letter-spacing: 0.02em;
+}
+
+.lil-gui .lil-title { letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ----------------------------------------------------------------------- notes */
+
+.notes {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 96px 32px 140px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 48px;
+}
+
+.notes h2 {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+  margin: 0 0 12px;
+}
+
+.notes p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
